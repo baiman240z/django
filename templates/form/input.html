@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Form{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Input forms</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <form method="post" action="confirm">
+                {% csrf_token %}
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label for="text">Text</label>
+                            <input type="text" class="form-control" name="text" value="{{ form.text }}">
+                        </div>
+                        <div class="form-group col-4">
+                            <label for="textarea">TextArea</label>
+                            <textarea name="textarea" class="form-control">{{ form.textarea }}</textarea>
+                        </div>
+                        <div class="form-group col-4">
+                            <label for="">Select</label>
+                            <select class="form-control" name="select">
+                                <option value=""></option>
+                                {% for key, val in selections.items %}
+                                <option value="{{ key }}" {% if key == form.select %}selected{% endif %}>{{ val }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-4">
+                            <label>Radio</label>
+                            <div>
+                                {% for key, val in selections.items %}
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" class="form-check-input" name="radio" id="radio-{{ key }}" value="{{ key }}"
+                                       {% if key == form.radio %}checked{% endif %}
+                                    >
+                                    <label class="form-check-label" for="radio-{{ key }}">{{ val }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label>Checkbox</label>
+                            <div>
+                                {% for key, val in selections.items %}
+                                <div class="form-check form-check-inline">
+                                    <input type="checkbox" class="form-check-input" name="checkbox"
+                                           id="checkbox-{{ key }}" value="{{ key }}"
+                                           {% if key in form.checkbox %}checked{% endif %}
+                                    >
+                                    <label class="form-check-label" for="checkbox-{{ key }}">{{ val }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-sm btn-primary">Check</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

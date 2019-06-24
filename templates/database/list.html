@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Database{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <h1>
+            Database
+            <a class="btn btn-sm btn-success" href="form"><i class="fas fa-plus"></i></a>
+            <a class="btn btn-sm btn-warning" href="download"><i class="fas fa-download"></i></a>
+        </h1>
+
+        <div class="mb-2">
+            {{ page.paginator.count }}件中
+            {{ page.start_index }}件
+            ～
+            {{ page.end_index }}件表示
+        </div>
+
+        <nav>
+            <ul class="pagination">
+                {% if page.has_previous %}
+                    <li><a class="page-link text-primary d-inline-block"
+                           href="?page={{ page.previous_page_number }}">←</a></li>
+                {% else %}
+                    <li class="disabled">
+                        <div class="page-link text-secondary d-inline-block disabled" href="#">←</div>
+                    </li>
+                {% endif %}
+
+                {% for link_page in page.paginator.page_range %}
+                    {% if link_page %}
+                        {% if link_page == page.number %}
+                            <li class="page-item active"><a href="#" class="page-link">
+                                {{ link_page }}
+                                <span class="sr-only">(current)</span></a>
+                            </li>
+                        {% else %}
+                            <li><a class="page-link text-primary d-inline-block"
+                                   href="?page={{ link_page }}">{{ link_page }}</a></li>
+                        {% endif %}
+                    {% else %}
+                        <li class="disabled">
+                            <a class="page-link text-secondary d-inline-block text-muted" href="#">・・・</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page.has_next %}
+                    <li><a class="page-link text-primary d-inline-block"
+                           href="?page={{ page.next_page_number }}">→</a></li>
+                {% else %}
+                    <li class="disabled">
+                        <div class="page-link text-secondary d-inline-block disabled" href="#">→</div>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <table class="table table-striped table-bordered">
+            <tbody>
+            <tr>
+                <th>id</th>
+                <th>title</th>
+                <th>updated_at</th>
+                <th></th>
+            </tr>
+            {% for row in page %}
+                <tr data-id="{{ row.id }}">
+                    <td><a href="form?id={{ row.id }}">{{ row.id }}</a></td>
+                    <td>{{ row.title }}</td>
+                    <td>{{ row.updated_at }}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-danger" name="delete-btn">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+    <form action="delete" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="">
+    </form>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function () {
+            $('button[name=delete-btn]').on('click', function () {
+                if (!confirm('are you sure?')) {
+                    return false;
+                }
+                var id = $(this).closest('tr').attr('data-id');
+                var form = $('form[action=delete]');
+                form.find('input[name=id]').val(id);
+                form.submit();
+            });
+        });
+    </script>
+{% endblock %}

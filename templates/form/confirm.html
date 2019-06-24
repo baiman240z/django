@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Form confirm{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Input forms</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <form method="post" action="complete">
+                {% csrf_token %}
+                    <input type="hidden" name="text" value="{{ form.text }}">
+                    <input type="hidden" name="textarea" value="{{ form.textarea }}">
+                    <input type="hidden" name="select" value="{{ form.select }}">
+                    <input type="hidden" name="radio" value="{{ form.radio }}">
+                    {% for key in form.checkbox %}
+                    <input type="hidden" name="checkbox" value="{{ key }}">
+                    {% endfor %}
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label for="text">Text</label>
+                            <div class="list-group-item">{{ form.text }}</div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label for="textarea">TextArea</label>
+                            <div class="list-group-item">{{ form.textarea }}</div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label for="">Select</label>
+                            <div class="list-group-item">
+                                {% for key, val in selections.items %}
+                                    {% if key == form.select %}{{ val }}{% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label>Radio</label>
+                            <div class="list-group-item">
+                                {% for key, val in selections.items %}
+                                    {% if key == form.radio %}{{ val }}{% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label>Checkbox</label>
+                            <ul class="list-group">
+                                {% for key, val in selections.items %}
+                                    {% if key in form.checkbox %}
+                                    <li class="list-group-item">{{ val }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-sm btn-warning" name="back-btn">Back</button>
+                        <button type="submit" class="btn btn-sm btn-primary">OK</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(function() {
+        $('button[name=back-btn]').on('click', function () {
+            $('form[action=complete]').attr('action', 'input').submit();
+        });
+    });
+</script>
+{% endblock %}
