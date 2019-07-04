@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
 from django.http import HttpResponse
 from ..models import Hoge
 from datetime import datetime
@@ -76,6 +77,7 @@ def complete(request):
                 created_at=datetime.now()
             )
         row.save()
+        messages.success(request, 'Saved')
 
     return redirect('/database/list')
 
@@ -85,6 +87,7 @@ def delete(request):
         try:
             row = Hoge.objects.get(id=request.POST.get('id'))
             row.delete()
+            messages.success(request, 'Deleted')
         except Hoge.DoesNotExist as e:
             print(e)
 

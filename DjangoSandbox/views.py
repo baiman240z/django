@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.core.mail import send_mail
+from django.contrib import messages
 
 
 def top(request):
@@ -18,10 +19,10 @@ def email(request):
             request.POST.get('sender'),
             [request.POST.get('receiptto')]
         )
-        params['message'] = 'your email has been sent'
         params['subject'] = request.POST.get('subject')
         params['body'] = request.POST.get('body')
         params['sender'] = request.POST.get('sender')
         params['receiptto'] = request.POST.get('receiptto')
+        messages.success(request, 'your email has been sent')
 
     return render(request, 'email.html', params)

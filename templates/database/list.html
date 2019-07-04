@@ -11,6 +11,8 @@
             <a class="btn btn-sm btn-warning" href="download"><i class="fas fa-download"></i></a>
         </h1>
 
+        {% include 'parts/messages.html' %}
+
         <div class="mb-2">
             {{ page.paginator.count }}件中
             {{ page.start_index }}件

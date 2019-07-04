@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.cache import cache
+from django.contrib import messages
 
 
 def caches(request):
@@ -14,6 +15,7 @@ def caches(request):
             request.POST.get('value'),
             int(request.POST.get('ttl'))
         )
+        messages.success(request, 'Saved')
 
     cache.set('cache_keys', keys, 86400)
     cache_items = cache.get_many(keys)
@@ -26,4 +28,5 @@ def caches(request):
 def delete(request):
     if request.method == 'POST':
         cache.delete(request.POST.get('key'))
+        messages.success(request, 'Deleted')
     return redirect('/cache')
